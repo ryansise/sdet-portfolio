@@ -96,9 +96,25 @@ def test_invalid_phone(playwright: Playwright):
     expect(page.locator("#firstName:invalid")).to_have_count(0)
     browser.close()
 
+def test_happy_path(playwright: Playwright):
+    chromium = playwright.chromium
+    browser = chromium.launch()
+    page = browser.new_page()
+    page.goto("https://demoqa.com/automation-practice-form")
+    page.fill("#firstName","Joe")
+    page.fill("#lastName","Smith")
+    page.fill("#userEmail","joe@somewhere.com")
+    page.fill("#userNumber","1234567890")
+    page.locator("input[type='radio'][value='Male']").check()
+    page.click("#submit")
+    success = page.locator('.modal-title')
+    expect(success).to_be_visible
+    browser.close()
+
 with sync_playwright() as playwright:
     test_invalid_firstName(playwright)
     test_invalid_lastName(playwright)
     test_invalid_gender(playwright)
     test_invalid_email(playwright)
     test_invalid_phone(playwright)
+    test_happy_path(playwright)
