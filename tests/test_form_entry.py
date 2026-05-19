@@ -12,10 +12,14 @@ def test_invalid_firstName(playwright: Playwright):
     nameField.fill("")
     page.fill("#lastName","Smith")
     page.fill("#userEmail","joe@somewhere.com")
-    page.get_by_role("radio").filter(has_text="Male").click
+    page.locator("input[type='radio'][value='Male']").check()
     page.fill("#userNumber","1234567890")
     page.click("#submit")
     expect(page.locator("#firstName:invalid")).to_have_count(1)
+    expect(page.locator("#lastName:invalid")).to_have_count(0)
+    expect(page.locator("#userEmail:invalid")).to_have_count(0)
+    expect(page.locator("#gender-radio-1:invalid")).to_have_count(0)
+    expect(page.locator("#userNumber:invalid")).to_have_count(0)
     browser.close()
 
 def test_invalid_lastName(playwright: Playwright):
@@ -28,7 +32,7 @@ def test_invalid_lastName(playwright: Playwright):
     page.fill("#firstName", "Joe")
     page.fill("#userEmail","joe@somewhere.com")
     page.fill("#userNumber","1234567890")
-    page.get_by_role("radio").filter(has_text="Male").click
+    page.locator("input[type='radio'][value='Male']").check()
     page.click("#submit")
     expect(page.locator("#lastName:invalid")).to_have_count(1)
     browser.close()
@@ -56,7 +60,7 @@ def test_invalid_email(playwright: Playwright):
     invalidField = page.locator("#userEmail")
     invalidField.fill("anything")
     page.fill("#userNumber","1234567890")
-    page.get_by_role("radio").filter(has_text="Male").click
+    page.locator("input[type='radio'][value='Male']").check()
     page.click("#submit")
     expect(page.locator("#userEmail:invalid")).to_have_count(1)
     browser.close()
@@ -71,7 +75,7 @@ def test_invalid_phone(playwright: Playwright):
     page.fill("#userEmail","joe@somewhere.com")
     invalidField = page.locator("#userNumber")
     invalidField.fill("12345")
-    page.get_by_role("radio").filter(has_text="Male").click
+    page.locator("input[type='radio'][value='Male']").check()
     page.click("#submit")
     expect(page.locator("#userNumber:invalid")).to_have_count(1)
     browser.close()
