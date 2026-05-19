@@ -37,7 +37,6 @@ def test_invalid_gender(playwright: Playwright):
     browser = chromium.launch()
     page = browser.new_page()
     page.goto("https://demoqa.com/automation-practice-form")
-    invalidEntry = page.locator("#gender-radio-1")
     page.fill("#firstName","Joe")
     page.fill("#lastName","Smith")
     page.fill("#userEmail","joe@somewhere.com")
