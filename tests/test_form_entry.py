@@ -44,7 +44,22 @@ def test_invalid_gender(playwright: Playwright):
     expect(page.locator("#gender-radio-1:invalid")).to_have_count(1)
     browser.close()
 
+def test_invalid_email(playwright: Playwright):
+    chromium = playwright.chromium
+    browser = chromium.launch()
+    page = browser.new_page()
+    page.goto("https://demoqa.com/automation-practice-form")
+    page.fill("#firstName","Joe")
+    page.fill("#lastName","Smith")
+    invalidField = page.locator("#userEmail")
+    invalidField.fill("anything")
+    page.get_by_role("radio").filter(has_text="Male").click
+    page.click("#submit")
+    expect(page.locator("#userEmail:invalid")).to_have_count(1)
+    browser.close()
+
 with sync_playwright() as playwright:
     test_invalid_firstName(playwright)
     test_invalid_lastName(playwright)
     test_invalid_gender(playwright)
+    test_invalid_email(playwright)
