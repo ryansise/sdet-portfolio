@@ -32,6 +32,20 @@ def test_invalid_lastName(playwright: Playwright):
     expect(page.locator("#lastName:invalid")).to_have_count(1)
     browser.close()
 
+def test_invalid_gender(playwright: Playwright):
+    chromium = playwright.chromium
+    browser = chromium.launch()
+    page = browser.new_page()
+    page.goto("https://demoqa.com/automation-practice-form")
+    invalidEntry = page.locator("#gender-radio-1")
+    page.fill("#firstName","Joe")
+    page.fill("#lastName","Smith")
+    page.fill("#userEmail","joe@somewhere.com")
+    page.click("#submit")
+    expect(page.locator("#gender-radio-1:invalid")).to_have_count(1)
+    browser.close()
+
 with sync_playwright() as playwright:
     test_invalid_firstName(playwright)
     test_invalid_lastName(playwright)
+    test_invalid_gender(playwright)
