@@ -35,6 +35,10 @@ def test_invalid_lastName(playwright: Playwright):
     page.locator("input[type='radio'][value='Male']").check()
     page.click("#submit")
     expect(page.locator("#lastName:invalid")).to_have_count(1)
+    expect(page.locator("#firstName:invalid")).to_have_count(0)
+    expect(page.locator("#userEmail:invalid")).to_have_count(0)
+    expect(page.locator("#gender-radio-1:invalid")).to_have_count(0)
+    expect(page.locator("#userNumber:invalid")).to_have_count(0)
     browser.close()
 
 def test_invalid_gender(playwright: Playwright):
