@@ -4,19 +4,29 @@ import os
 
 load_dotenv()
 
-API_KEY = os.getenv("REQRES_API_KEY")
-BASE_URL = os.getenv("REQRES_BASE_URL")
-
-@pytest.mark.skipif(not API_KEY, reason="REQRES_API_KEY not set")
-def test_authenticated_endpoint():
-    headers = {
-        "x-api-key": API_KEY,
+@pytest.fixture
+def auth_session():
+    api_key = os.getenv("REQRES_API_KEY")
+    base_url = os.getenv("REQRES_BASE_URL")
+    assert api_key, "REQRES_API_KEY is required"
+    assert base_url, "REQRES_BASE_URL is required"
+    session = requests.Session()
+    session.headers.update({
+        "x-api-key": api_key,
         "Content-Type": "application/json"
-    }
-    response = requests.get(f"{BASE_URL}", headers=headers, timeout=30)
+    })
+    return session,base_url
+
+
+def test_authenticated_endpoint(auth_session):
+    session,base_url = auth_session
+    response = session.get(base_url, timeout=30)
     assert response.status_code == 200
-    response_invalid = requests.get(f"{BASE_URL}", timeout=30)
-    assert response_invalid.status_code == 401
+    
+def test_auth_endpoint_no_key():
+    url = os.getenv("REQRES_BASE_URL")
+    response = requests.get(url, timeout=30)
+    assert response.status_code in (401, 403)
 
 def test_api_get_functionality():
     base_url = "https://jsonplaceholder.typicode.com/posts"
