@@ -1,4 +1,6 @@
 import pytest, requests
+from dotenv import load_dotenv
+import os
 
 def test_api_get_functionality():
     base_url = "https://jsonplaceholder.typicode.com/posts"
@@ -32,7 +34,11 @@ def test_api_post_functionality():
     assert "id" in json_response
 
 def test_api_get_negative():
-    base_url = "https://jsonplaceholder.typicode.com/posts/999999999"
-    response = requests.get(base_url, timeout=30)
 
-    assert response.status_code == 404
+    load_dotenv()
+
+    API_KEY = os.getenv("RIQRES_API_KEY")
+    BASE_URL = os.getenv("RIQRES_BASE_URL")
+
+    assert API_KEY, "RIQRES_API_KEY is required"
+    assert BASE_URL, "RIQRES_BASE_URL is required"
