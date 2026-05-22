@@ -28,19 +28,17 @@ def test_auth_endpoint_no_key():
     response = requests.get(url, timeout=30)
     assert response.status_code in (401, 403)
 
-def test_api_get_functionality():
-    base_url = "https://jsonplaceholder.typicode.com/posts"
-    response = requests.get(base_url, timeout=30)
-    assert response.status_code == 200
-
+def test_api_get_functionality(auth_session):
+    session,base_url = auth_session
+    response = session.get(base_url, timeout=30)
     data = response.json()
     assert len(data) > 0
-    assert isinstance(data,list)
-    assert isinstance(data[0],dict)
-    assert "id" in data[0]
-    assert "title" in data[0]
-    assert "body" in data[0]
-    assert "userId" in data[0]
+    assert isinstance(data,dict)
+    assert "collection_id" in data["data"][0]
+    assert "name" in data["data"][0]["data"]
+    assert "category" in data["data"][0]["data"]
+    assert "price" in data["data"][0]["data"]
+    assert "in_stock" in data["data"][0]["data"]
 
 def test_api_post_functionality():
     base_url = "https://jsonplaceholder.typicode.com/posts"
