@@ -32,13 +32,21 @@ def test_api_get_functionality(auth_session):
     session,base_url = auth_session
     response = session.get(base_url, timeout=30)
     data = response.json()
-    assert len(data) > 0
     assert isinstance(data,dict)
-    assert "collection_id" in data["data"][0]
-    assert "name" in data["data"][0]["data"]
-    assert "category" in data["data"][0]["data"]
-    assert "price" in data["data"][0]["data"]
-    assert "in_stock" in data["data"][0]["data"]
+    assert "data" in data
+    assert isinstance(data["data"],list)
+    assert len(data["data"]) > 0
+
+    metadata = data["data"][0]
+    assert "collection_id" in metadata
+    assert "app_user_id" in metadata
+    assert "project_id" in metadata
+
+    first_item = data["data"][0]["data"]
+    assert "name" in first_item
+    assert "category" in first_item
+    assert "price" in first_item
+    assert "in_stock"in first_item
 
 def test_api_post_functionality():
     base_url = "https://jsonplaceholder.typicode.com/posts"
