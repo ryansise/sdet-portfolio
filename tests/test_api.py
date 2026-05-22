@@ -2,6 +2,22 @@ import pytest, requests
 from dotenv import load_dotenv
 import os
 
+load_dotenv()
+
+API_KEY = os.getenv("REQRES_API_KEY")
+BASE_URL = os.getenv("REQRES_BASE_URL")
+
+@pytest.mark.skipif(not API_KEY, reason="REQRES_API_KEY not set")
+def test_authenticated_endpoint():
+    headers = {
+        "x-api-key": API_KEY,
+        "Content-Type": "application/json"
+    }
+    response = requests.get(f"{BASE_URL}", headers=headers, timeout=30)
+    assert response.status_code == 200
+    response_invalid = requests.get(f"{BASE_URL}", timeout=30)
+    assert response_invalid.status_code == 401
+
 def test_api_get_functionality():
     base_url = "https://jsonplaceholder.typicode.com/posts"
     response = requests.get(base_url, timeout=30)
@@ -33,12 +49,6 @@ def test_api_post_functionality():
     assert json_response["body"] == payload["body"]
     assert "id" in json_response
 
-def test_api_get_negative():
+#def test_api_get_negative():
 
-    load_dotenv()
-
-    API_KEY = os.getenv("RIQRES_API_KEY")
-    BASE_URL = os.getenv("RIQRES_BASE_URL")
-
-    assert API_KEY, "RIQRES_API_KEY is required"
-    assert BASE_URL, "RIQRES_BASE_URL is required"
+    
