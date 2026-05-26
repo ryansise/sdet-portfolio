@@ -1,13 +1,14 @@
-# use https://demoqa.com/automation-practice-form
-
 import pytest
-from playwright.sync_api import sync_playwright, Playwright, expect
+from playwright.sync_api import expect
 
-def test_invalid_firstName(playwright: Playwright):
-    chromium = playwright.chromium
-    browser = chromium.launch()
+@pytest.fixture
+def page(browser):
     page = browser.new_page()
     page.goto("https://demoqa.com/automation-practice-form")
+    yield page
+    page.close()
+
+def test_invalid_firstName(page):
     nameField = page.locator("#firstName")
     nameField.fill("")
     page.fill("#lastName","Smith")
@@ -20,13 +21,8 @@ def test_invalid_firstName(playwright: Playwright):
     expect(page.locator("#userEmail:invalid")).to_have_count(0)
     expect(page.locator("#gender-radio-1:invalid")).to_have_count(0)
     expect(page.locator("#userNumber:invalid")).to_have_count(0)
-    browser.close()
 
-def test_invalid_lastName(playwright: Playwright):
-    chromium = playwright.chromium
-    browser = chromium.launch()
-    page = browser.new_page()
-    page.goto("https://demoqa.com/automation-practice-form")
+def test_invalid_lastName(page):
     nameField = page.locator("#lastName")
     nameField.fill("")
     page.fill("#firstName", "Joe")
@@ -39,13 +35,8 @@ def test_invalid_lastName(playwright: Playwright):
     expect(page.locator("#userEmail:invalid")).to_have_count(0)
     expect(page.locator("#gender-radio-1:invalid")).to_have_count(0)
     expect(page.locator("#userNumber:invalid")).to_have_count(0)
-    browser.close()
 
-def test_invalid_gender(playwright: Playwright):
-    chromium = playwright.chromium
-    browser = chromium.launch()
-    page = browser.new_page()
-    page.goto("https://demoqa.com/automation-practice-form")
+def test_invalid_gender(page):
     page.fill("#firstName","Joe")
     page.fill("#lastName","Smith")
     page.fill("#userEmail","joe@somewhere.com")
@@ -56,13 +47,8 @@ def test_invalid_gender(playwright: Playwright):
     expect(page.locator("#firstName:invalid")).to_have_count(0)
     expect(page.locator("#userEmail:invalid")).to_have_count(0)
     expect(page.locator("#userNumber:invalid")).to_have_count(0)
-    browser.close()
 
-def test_invalid_email(playwright: Playwright):
-    chromium = playwright.chromium
-    browser = chromium.launch()
-    page = browser.new_page()
-    page.goto("https://demoqa.com/automation-practice-form")
+def test_invalid_email(page):
     page.fill("#firstName","Joe")
     page.fill("#lastName","Smith")
     invalidField = page.locator("#userEmail")
@@ -75,13 +61,8 @@ def test_invalid_email(playwright: Playwright):
     expect(page.locator("#lastName:invalid")).to_have_count(0)
     expect(page.locator("#firstName:invalid")).to_have_count(0)
     expect(page.locator("#userNumber:invalid")).to_have_count(0)
-    browser.close()
 
-def test_invalid_phone(playwright: Playwright):
-    chromium = playwright.chromium
-    browser = chromium.launch()
-    page = browser.new_page()
-    page.goto("https://demoqa.com/automation-practice-form")
+def test_invalid_phone(page):
     page.fill("#firstName","Joe")
     page.fill("#lastName","Smith")
     page.fill("#userEmail","joe@somewhere.com")
@@ -94,13 +75,8 @@ def test_invalid_phone(playwright: Playwright):
     expect(page.locator("#gender-radio-1:invalid")).to_have_count(0)
     expect(page.locator("#lastName:invalid")).to_have_count(0)
     expect(page.locator("#firstName:invalid")).to_have_count(0)
-    browser.close()
 
-def test_happy_path(playwright: Playwright):
-    chromium = playwright.chromium
-    browser = chromium.launch()
-    page = browser.new_page()
-    page.goto("https://demoqa.com/automation-practice-form")
+def test_happy_path(page):
     page.fill("#firstName","Joe")
     page.fill("#lastName","Smith")
     page.fill("#userEmail","joe@somewhere.com")
@@ -109,12 +85,3 @@ def test_happy_path(playwright: Playwright):
     page.click("#submit")
     success = page.locator('.modal-title')
     expect(success).to_be_visible
-    browser.close()
-
-with sync_playwright() as playwright:
-    test_invalid_firstName(playwright)
-    test_invalid_lastName(playwright)
-    test_invalid_gender(playwright)
-    test_invalid_email(playwright)
-    test_invalid_phone(playwright)
-    test_happy_path(playwright)
