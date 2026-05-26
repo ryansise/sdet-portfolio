@@ -8,7 +8,7 @@ def page(browser):
     yield page
     page.close()
 
-def test_invalid_firstName(page):
+def test_invalid_first_name(page):
     nameField = page.locator("#firstName")
     nameField.fill("")
     page.fill("#lastName","Smith")
@@ -22,7 +22,7 @@ def test_invalid_firstName(page):
     expect(page.locator("#gender-radio-1:invalid")).to_have_count(0)
     expect(page.locator("#userNumber:invalid")).to_have_count(0)
 
-def test_invalid_lastName(page):
+def test_invalid_last_name(page):
     nameField = page.locator("#lastName")
     nameField.fill("")
     page.fill("#firstName", "Joe")
