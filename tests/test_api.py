@@ -55,22 +55,29 @@ def test_api_get_functionality(auth_session):
     assert "price" in nested
     assert "in_stock" in nested
 
-def test_api_post_functionality():
-    base_url = "https://jsonplaceholder.typicode.com/posts"
+def test_api_post_functionality(auth_session):
+    session,base_url = auth_session
     payload = {
-        "userId": 5,
-        "title": "This is not the post you're looking for",
-        "body": "You want to go home & re-think your life"
+        "data": {
+            "name": "Widget",
+            "category": "Electronics",
+            "price": 25.99,
+            "in_stock": True
+        }
     }
 
-    response = requests.post(base_url,json=payload,timeout=30)
-    assert response.status_code == 201
+    response = session.post(base_url, json=payload, timeout=30)
+    assert response.status_code in (200,201)
 
     json_response = response.json()
-    assert json_response["userId"] == 5
-    assert json_response["title"] == payload["title"]
-    assert json_response["body"] == payload["body"]
-    assert "id" in json_response
+    assert isinstance(json_response,dict)
+    assert "data" in json_response
+
+    created = json_response["data"]["data"]
+    assert created["name"] == payload["data"]["name"]
+    assert created["category"] == payload["data"]["category"]
+    assert created["price"] == payload["data"]["price"]
+    assert created["in_stock"] == payload["data"]["in_stock"]
 
 #def test_api_get_negative():
 
