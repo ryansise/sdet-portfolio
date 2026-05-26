@@ -10,11 +10,14 @@ def auth_session():
     base_url = os.getenv("REQRES_BASE_URL")
     assert api_key, "REQRES_API_KEY is required"
     assert base_url, "REQRES_BASE_URL is required"
+
     session = requests.Session()
-    session.headers.update({
-        "x-api-key": api_key,
-        "Content-Type": "application/json"
-    })
+    session.headers.update(
+        {
+            "x-api-key": api_key,
+            "Content-type": "application/json"
+        }
+    )
     return session,base_url
 
 
