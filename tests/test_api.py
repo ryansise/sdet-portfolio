@@ -79,6 +79,11 @@ def test_api_post_functionality(auth_session):
     assert created["price"] == payload["data"]["price"]
     assert created["in_stock"] == payload["data"]["in_stock"]
 
-#def test_api_get_negative():
+def test_api_get_negative(auth_session):
+    session,base_url = auth_session
+
+    bad_url = f"{base_url[:-len('?project_id=24036')]}/not-gonna-work"
+    response = session.get(bad_url, timeout=30)
+    assert response.status_code == 404
 
     
