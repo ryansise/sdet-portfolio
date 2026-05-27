@@ -1,18 +1,33 @@
 # SDET Portfolio
 
-## Description
-This is a collection of automated tests on publicly-available APIs that don't require account login.  This will be done using Python automation test frameworks, and I will update this readme with the tech as I build them.
+## Overview
+A portfolio of Python test automation projects covering UI and API testing. The repo demonstrates pytest-based test design, Playwright browser automation, and Requests-based API validation.
 
-## Quick Start (Any Clone)
+## What’s included
+- UI validation tests using Playwright and pytest.
+- API testing using Requests and environment-based configuration.
+- A simple TodoMVC test showing basic end-to-end automation.
+
+## Tech stack
+- Python
+- pytest
+- Playwright
+- Requests
+- python-dotenv
+
+## Quick start
 ```bash
 git clone https://github.com/ryansise/sdet-portfolio
 cd sdet-portfolio
-# 1. Python venv (30 seconds)
-python3 -m venv .venv && source .venv/bin/activate # Linux/Mac
-# .venv\Scripts\activate
-# Windows
-# 2. Install exact deps
+python3 -m venv .venv
+source .venv/bin/activate    # Linux/Mac
+# .venv\Scripts\activate     # Windows
 pip install -r requirements.txt
 playwright install --with-deps
-# 3. Run tests + watch videos
 pytest tests/
+```
+
+## Notes
+- API tests use environment variables stored in a local `.env` file.
+- Browser tests are configured to retain videos on failure.
+- This repo is a work in progress and will continue to expand with additional automation examples.
