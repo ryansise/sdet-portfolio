@@ -1,3 +1,5 @@
+[![CI](https://github.com/ryansise/sdet-portfolio/actions/workflows/github-actions.yml/badge.svg)](https://github.com/ryansise/sdet-portfolio/actions/workflows/github-actions.yml)
+
 # SDET Portfolio
 
 This repository showcases practical test automation work built with Python. It includes UI automation, API validation, and a small end-to-end browser test, all organized to demonstrate the kind of automation skills used in real SDET roles.
@@ -56,6 +58,12 @@ This file is ignored by Git and used only on the local machine.
 - `test_form_entry.py` — UI validation tests for required inputs and invalid values.
 - `test_api.py` — API tests covering authenticated requests, response checks, and negative coverage.
 - `test_todomvc.py` — Simple browser automation example using Playwright and pytest.
+
+## Continuous Integration
+
+This repository uses GitHub Actions to run the test suite on push and pull request events with Python 3.12.
+
+The workflow installs dependencies, installs Playwright browsers, runs the tests, and uploads an HTML report artifact for review.
 
 ## Repository hygiene
 
