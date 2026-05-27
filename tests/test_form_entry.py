@@ -18,6 +18,13 @@ def valid_form_data():
         "gender": "Male"
     }
 
+def fill_valid_form(form_page,valid_form_data):
+    form_page.fill("#firstName",valid_form_data["first_name"])
+    form_page.fill("#lastName",valid_form_data["last_name"])
+    form_page.fill("#userEmail",valid_form_data["user_email"])
+    form_page.fill("#userNumber",valid_form_data["user_number"])
+    form_page.locator(f"input[type='radio'][value='{valid_form_data['gender']}']").check()
+
 def test_invalid_first_name(form_page,valid_form_data):
     form_page.fill("#lastName",valid_form_data["last_name"])
     form_page.fill("#userEmail",valid_form_data["user_email"])
@@ -80,10 +87,6 @@ def test_invalid_phone(form_page,valid_form_data):
     expect(form_page.locator("#firstName:invalid")).to_have_count(0)
 
 def test_happy_path(form_page,valid_form_data):
-    form_page.fill("#firstName",valid_form_data["first_name"])
-    form_page.fill("#lastName",valid_form_data["last_name"])
-    form_page.fill("#userEmail",valid_form_data["user_email"])
-    form_page.fill("#userNumber",valid_form_data["user_number"])
-    form_page.locator(f"input[type='radio'][value='{valid_form_data['gender']}']").check()
+    fill_valid_form(form_page, valid_form_data)
     form_page.click("#submit")
     expect(form_page.locator(".modal-title")).to_be_visible()
