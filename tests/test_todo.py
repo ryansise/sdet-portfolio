@@ -1,16 +1,16 @@
 import pytest
-from playwright.sync_api import sync_playwright, Playwright, expect
+from playwright.sync_api import expect
 
-def test_add_todo(playwright: Playwright):
-    chromium = playwright.chromium
-    browser = chromium.launch()
+@pytest.fixture
+def session(browser):
     page = browser.new_page()
     page.goto("https://todomvc.com/examples/react/dist/")
-    page.fill(".new-todo", "Test KYC Workflow")
-    page.press(".new-todo", "Enter")
-    test_locator = page.locator("ul > li")
-    expect(test_locator).to_contain_text(["Test KYC Workflow"])
-    browser.close()
+    yield page
+    page.close()
 
-with sync_playwright() as playwright:
-    test_add_todo(playwright)
+def test_add_todo(session):
+    session.fill(".new-todo", "Test KYC Workflow")
+    session.press(".new-todo", "Enter")
+    todo_items = session.locator("ul > li")
+    expect(todo_items).to_contain_text(["Test KYC Workflow"])
+
