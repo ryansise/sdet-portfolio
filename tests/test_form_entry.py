@@ -8,13 +8,21 @@ def form_page(browser):
     yield page
     page.close()
 
-def test_invalid_first_name(form_page):
-    nameField = form_page.locator("#firstName")
-    nameField.fill("")
-    form_page.fill("#lastName","Smith")
-    form_page.fill("#userEmail","joe@somewhere.com")
-    form_page.locator("input[type='radio'][value='Male']").check()
-    form_page.fill("#userNumber","1234567890")
+@pytest.fixture
+def valid_form_data():
+    return {
+        "first_name": "Joe",
+        "last_name": "Smith",
+        "user_email": "joe@somewhere.com",
+        "user_number": "1234567890",
+        "gender": "Male"
+    }
+
+def test_invalid_first_name(form_page,valid_form_data):
+    form_page.fill("#lastName",valid_form_data["last_name"])
+    form_page.fill("#userEmail",valid_form_data["user_email"])
+    form_page.locator(f"input[type='radio'][value='{valid_form_data['gender']}']").check()
+    form_page.fill("#userNumber",valid_form_data["user_number"])
     form_page.click("#submit")
     expect(form_page.locator("#firstName:invalid")).to_be_visible()
     expect(form_page.locator("#lastName:invalid")).to_have_count(0)
@@ -22,13 +30,11 @@ def test_invalid_first_name(form_page):
     expect(form_page.locator("#gender-radio-1:invalid")).to_have_count(0)
     expect(form_page.locator("#userNumber:invalid")).to_have_count(0)
 
-def test_invalid_last_name(form_page):
-    nameField = form_page.locator("#lastName")
-    nameField.fill("")
-    form_page.fill("#firstName", "Joe")
-    form_page.fill("#userEmail","joe@somewhere.com")
-    form_page.fill("#userNumber","1234567890")
-    form_page.locator("input[type='radio'][value='Male']").check()
+def test_invalid_last_name(form_page,valid_form_data):
+    form_page.fill("#firstName",valid_form_data["first_name"])
+    form_page.fill("#userEmail",valid_form_data["user_email"])
+    form_page.fill("#userNumber",valid_form_data["user_number"])
+    form_page.locator(f"input[type='radio'][value='{valid_form_data['gender']}']").check()
     form_page.click("#submit")
     expect(form_page.locator("#lastName:invalid")).to_be_visible()
     expect(form_page.locator("#firstName:invalid")).to_have_count(0)
@@ -36,11 +42,11 @@ def test_invalid_last_name(form_page):
     expect(form_page.locator("#gender-radio-1:invalid")).to_have_count(0)
     expect(form_page.locator("#userNumber:invalid")).to_have_count(0)
 
-def test_invalid_gender(form_page):
-    form_page.fill("#firstName","Joe")
-    form_page.fill("#lastName","Smith")
-    form_page.fill("#userEmail","joe@somewhere.com")
-    form_page.fill("#userNumber","1234567890")
+def test_invalid_gender(form_page,valid_form_data):
+    form_page.fill("#firstName",valid_form_data["first_name"])
+    form_page.fill("#lastName",valid_form_data["last_name"])
+    form_page.fill("#userEmail",valid_form_data["user_email"])
+    form_page.fill("#userNumber",valid_form_data["user_number"])
     form_page.click("#submit")
     expect(form_page.locator("#gender-radio-1:invalid")).to_be_visible()
     expect(form_page.locator("#lastName:invalid")).to_have_count(0)
@@ -48,13 +54,12 @@ def test_invalid_gender(form_page):
     expect(form_page.locator("#userEmail:invalid")).to_have_count(0)
     expect(form_page.locator("#userNumber:invalid")).to_have_count(0)
 
-def test_invalid_email(form_page):
-    form_page.fill("#firstName","Joe")
-    form_page.fill("#lastName","Smith")
-    invalidField = form_page.locator("#userEmail")
-    invalidField.fill("anything")
-    form_page.fill("#userNumber","1234567890")
-    form_page.locator("input[type='radio'][value='Male']").check()
+def test_invalid_email(form_page,valid_form_data):
+    form_page.fill("#firstName",valid_form_data["first_name"])
+    form_page.fill("#lastName",valid_form_data["last_name"])
+    form_page.fill("#userNumber",valid_form_data["user_number"])
+    form_page.fill("#userEmail","not-an-email")
+    form_page.locator(f"input[type='radio'][value='{valid_form_data['gender']}']").check()
     form_page.click("#submit")
     expect(form_page.locator("#userEmail:invalid")).to_be_visible()
     expect(form_page.locator("#gender-radio-1:invalid")).to_have_count(0)
@@ -62,13 +67,11 @@ def test_invalid_email(form_page):
     expect(form_page.locator("#firstName:invalid")).to_have_count(0)
     expect(form_page.locator("#userNumber:invalid")).to_have_count(0)
 
-def test_invalid_phone(form_page):
-    form_page.fill("#firstName","Joe")
-    form_page.fill("#lastName","Smith")
-    form_page.fill("#userEmail","joe@somewhere.com")
-    invalidField = form_page.locator("#userNumber")
-    invalidField.fill("12345")
-    form_page.locator("input[type='radio'][value='Male']").check()
+def test_invalid_phone(form_page,valid_form_data):
+    form_page.fill("#firstName",valid_form_data["first_name"])
+    form_page.fill("#lastName",valid_form_data["last_name"])
+    form_page.fill("#userEmail",valid_form_data["user_email"])
+    form_page.locator(f"input[type='radio'][value='{valid_form_data['gender']}']").check()
     form_page.click("#submit")
     expect(form_page.locator("#userNumber:invalid")).to_be_visible()
     expect(form_page.locator("#userEmail:invalid")).to_have_count(0)
@@ -76,12 +79,11 @@ def test_invalid_phone(form_page):
     expect(form_page.locator("#lastName:invalid")).to_have_count(0)
     expect(form_page.locator("#firstName:invalid")).to_have_count(0)
 
-def test_happy_path(form_page):
-    form_page.fill("#firstName","Joe")
-    form_page.fill("#lastName","Smith")
-    form_page.fill("#userEmail","joe@somewhere.com")
-    form_page.fill("#userNumber","1234567890")
-    form_page.locator("input[type='radio'][value='Male']").check()
+def test_happy_path(form_page,valid_form_data):
+    form_page.fill("#firstName",valid_form_data["first_name"])
+    form_page.fill("#lastName",valid_form_data["last_name"])
+    form_page.fill("#userEmail",valid_form_data["user_email"])
+    form_page.fill("#userNumber",valid_form_data["user_number"])
+    form_page.locator(f"input[type='radio'][value='{valid_form_data['gender']}']").check()
     form_page.click("#submit")
-    success = form_page.locator('.modal-title')
-    expect(success).to_be_visible()
+    expect(form_page.locator(".modal-title")).to_be_visible()
